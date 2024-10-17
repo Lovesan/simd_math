@@ -1,5 +1,5 @@
-#ifndef __SIMD_MATH_HPP__
-#define __SIMD_MATH_HPP__
+#ifndef __SIMD_MATH_H__
+#define __SIMD_MATH_H__
 
 #ifdef __cplusplus
 #include <cstdint>
@@ -606,4 +606,4 @@ SIMD_MATH_API(float4) float4_saturate(float4 v)
 }
 #endif
 
-#endif // __SIMD_MATH_HPP__
+#endif // __SIMD_MATH_H__
