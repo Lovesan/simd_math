@@ -464,9 +464,9 @@ SIMD_MATH_API(float4) float3_load(const float3* source)
 
 SIMD_MATH_API(void) float3_store(float3* dest, float4 v)
 {
-    *(int*)(&dest->x) = _mm_extract_ps(v, 0);
-    *(int*)(&dest->y) = _mm_extract_ps(v, 1);
-    *(int*)(&dest->z) = _mm_extract_ps(v, 2);
+    _mm_store_sd((double*)(dest), _mm_castps_pd(v));
+    float4 z = float4_permute(v, SIMD_SHUFFLE(2, 2, 2, 2));
+    _mm_store_ss(&dest->z, z);
 }
 
 SIMD_MATH_API(int4) int3_load(const int3* source)
@@ -487,7 +487,7 @@ SIMD_MATH_API(void) int3_store(int3* dest, int4 v)
 
 SIMD_MATH_API(float4) half3_load(const half3* source)
 {
-    int4 xy = _mm_loadu_si32((const int*)source);
+    int4 xy = _mm_loadu_si32(source);
     return _mm_cvtph_ps(_mm_insert_epi32(xy, source->z, 1));
 }
 
@@ -500,7 +500,7 @@ SIMD_MATH_API(void) half3_store(half3* dest, float4 v)
 
 SIMD_MATH_API(int4) ushort3_load(const ushort3* source)
 {
-    int4 xy = _mm_cvtsi32_si128(*(int*) & source->x);
+    int4 xy = _mm_loadu_si32(source);
     xy = _mm_insert_epi32(xy, _mm_extract_epi16(xy, 1), 1);
     xy = int4_and(xy, int4_set(0xFFFF, 0xFFFF, 0, 0));
     return _mm_insert_epi32(xy, source->z, 2);
