@@ -83,6 +83,11 @@ typedef struct
     uint16_t z;
 } ushort3;
 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wgnu-anonymous-struct"
+#pragma clang diagnostic ignored "-Wnested-anon-types"
+#endif
 typedef struct
 {
     union
@@ -96,6 +101,10 @@ typedef struct
         float m[3][3];
     };
 } float3x3;
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 
 #define float4_shuffle(v1, v2, shuffle) _mm_shuffle_ps(v1, v2, shuffle)
 
@@ -495,7 +504,7 @@ SIMD_MATH_API(void) half3_store(half3* dest, float4 v)
 {
     int4 packed = _mm_cvtps_ph(v, _MM_FROUND_TO_NEAREST_INT);
     _mm_storeu_si32(dest, packed);
-    dest->z = _mm_extract_epi16(packed, 2);
+    dest->z = (uint16_t)_mm_extract_epi16(packed, 2);
 }
 
 SIMD_MATH_API(int4) ushort3_load(const ushort3* source)
@@ -510,9 +519,9 @@ SIMD_MATH_API(void) ushort3_store(ushort3* dest, int4 v)
 {
     v = int4_clamp(v, int4_zero(), int4_set1(65535));
     // SSE packing uses signed rules, so manually pack items instead
-    dest->x = _mm_extract_epi16(v, 0);
-    dest->y = _mm_extract_epi16(v, 2);
-    dest->z = _mm_extract_epi16(v, 4);
+    dest->x = (uint16_t)_mm_extract_epi16(v, 0);
+    dest->y = (uint16_t)_mm_extract_epi16(v, 2);
+    dest->z = (uint16_t)_mm_extract_epi16(v, 4);
 }
 
 SIMD_MATH_API(float4x4) float3x3_load(const float3x3* source)
