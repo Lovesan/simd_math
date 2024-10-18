@@ -83,6 +83,11 @@ typedef struct
     uint16_t z;
 } ushort3;
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable:4201)
+// C4201: nonstandard extension used : nameless struct/union
+#endif
 #ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wgnu-anonymous-struct"
@@ -104,6 +109,9 @@ typedef struct
 
 #ifdef __clang__
 #pragma clang diagnostic pop
+#endif
+#ifdef _MSC_VER
+#pragma warning(pop)
 #endif
 
 #define float4_shuffle(v1, v2, shuffle) _mm_shuffle_ps(v1, v2, shuffle)
