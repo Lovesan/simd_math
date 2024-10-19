@@ -71,6 +71,14 @@ typedef struct
 
 typedef struct
 {
+    uint16_t x;
+    uint16_t y;
+    uint16_t z;
+    uint16_t w;
+} half4;
+
+typedef struct
+{
     int16_t x;
     int16_t y;
     int16_t z;
@@ -558,9 +566,9 @@ SIMD_MATH_API(float4) float3_transform(float4 v, float4x4 m)
 {
     float4 res = float4_permute(v, SIMD_SHUFFLE(2, 2, 2, 2)); // Z
     res = float4_fmadd(res, m.r[2], m.r[3]);
-    float4 tmp = float4_permute(v, _MM_SHUFFLE(1, 1, 1, 1)); // Y
+    float4 tmp = float4_permute(v, SIMD_SHUFFLE(1, 1, 1, 1)); // Y
     res = float4_fmadd(tmp, m.r[1], res);
-    tmp = float4_permute(v, _MM_SHUFFLE(0, 0, 0, 0)); // X
+    tmp = float4_permute(v, SIMD_SHUFFLE(0, 0, 0, 0)); // X
     res = float4_fmadd(tmp, m.r[0], res);
     return res;
 }
